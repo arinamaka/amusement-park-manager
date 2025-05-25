@@ -6,13 +6,14 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"time"
 
 	_ "github.com/mattn/go-sqlite3"
 	"golang.org/x/crypto/bcrypt"
 )
 
 var templates = template.Must(template.ParseGlob("templates/*.html"))
-var pool *sql.DB
+var db *sql.DB
 
 type User struct {
 	ID       int
@@ -24,10 +25,35 @@ type User struct {
 	Admin    bool
 }
 
+type Ticket struct {
+	ID   int
+	Type string
+	Used bool
+	DateEmmited string
+	DateExpiry string
+	DateUsed string
+	BuyerId int
+}
+
+type CreditCard struct {
+	ID   int
+	Name string
+	Number int
+	MonthExpiry int
+	YearExpiry int
+	CCV int
+};
+
+type Visitor struct {
+	ID   int
+	Name string
+	CreditCardID int
+}
+
 func main() {
 	var err error
-	pool, err = sql.Open("sqlite3", "./db.sqlite")
-	defer pool.Close()
+	db, err = sql.Open("sqlite3", "./db.sqlite")
+	defer db.Close()
 	if err != nil {
 		log.Fatal("Unable to open database", err)
 	}
@@ -60,6 +86,60 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	switch r.Method{
+		case "POST":
+		r.ParseForm()
+		var ticket Ticket
+		var card CreditCard
+		var visitor Visitor
+		ticket.Type = r.FormValue("type")
+		card.Name = r.FormValue("cardname")
+		card.Number, _ = strconv.Atoi(r.FormValue("cardnumber"))
+		card.MonthExpiry, _ = strconv.Atoi(r.FormValue("expmonth"))
+		card.YearExpiry, _ = strconv.Atoi(r.FormValue("expyear"))
+		card.CCV, _ = strconv.Atoi(r.FormValue("cvv"))
+
+		// Insert credit card
+		result, err := db.Exec("INSERT INTO CreditCard (Name,Number,MonthExpiry,YearExpiry,CCV) VALUES (?,?,?,?,?) RETURNING ID", 
+			card.Name, 
+			card.Number,
+			card.MonthExpiry, 
+			card.YearExpiry,
+			card.CCV)
+		if err != nil {
+			log.Printf("Scan error: %v", err)
+			return
+		}
+		id, _ := result.LastInsertId()
+		card.ID = int(id)
+		log.Printf("CardID: %v", card.ID)
+
+		// Insert Visitor, with cardID
+		result, err = db.Exec("INSERT INTO Visitor (Name, CreditCardID) VALUES (?,?) RETURNING ID", card.Name, card.ID)
+		if err != nil {
+			log.Printf("Scan error: %v", err)
+			return
+		}
+		id, _ = result.LastInsertId()
+		visitor.ID = int(id)
+		
+		log.Printf("VisitorID: %v", visitor.ID)
+
+		// Insert Ticket, with VisitorID
+		_, err = db.Exec("INSERT INTO Ticket (Type, Used, DateEmmited, DateExpiry, DateUsed, BuyerId) VALUES (?,?,?,?,?,?)", 
+			ticket.Type,
+			false,
+			time.Now().Format(time.RFC3339),
+			time.Now().AddDate(0,1,0).Format(time.RFC3339), // Expires one month after purchase
+			"0001-01-01T00:00:00Z",
+			visitor.ID,
+		)
+		if err != nil {
+			log.Printf("Scan error: %v", err)
+			return
+		}
+		log.Print("Added Ticket!")
+	}
 	templates.ExecuteTemplate(w, "index.html", nil)
 }
 
@@ -86,7 +166,7 @@ func adminHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func queryUsers(query string, values ...any) []User {
-	rows, err := pool.Query("SELECT * FROM Users "+query, values...)
+	rows, err := db.Query("SELECT * FROM Users "+query, values...)
 	// log.Printf("q: %v %v","SELECT * FROM Users " + query, values)
 	if err != nil {
 		log.Printf("error: Query error %v.", err)
@@ -104,6 +184,7 @@ func queryUsers(query string, values ...any) []User {
 	return result
 }
 
+
 func loginHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "POST":
@@ -114,13 +195,6 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		user := users[0]
-
-		// err := pool.QueryRow("SELECT * FROM Users WHERE Email=?",r.FormValue("email")).Scan(&uer.ID,&uer.Name,&user.Email,&user.PhoneNr,&user.Password,&user.Salt,&user.Admin)
-		// if err == sql.ErrNoRows {
-		// log.Printf("No user with email: %v", r.FormValue("email"))
-		// }else if err != nil {
-		// log.Printf("Querry error: %v", err)
-		// } else {
 
 		if r.FormValue("email") == user.Email && checkPasswordHash(r.FormValue("password"), user.Email, user.Password) {
 			log.Printf("Authenificated user: %s (%v,%v,%v,%v,%v,%v,%v)", r.FormValue("email"), user.ID, user.Name, user.Email, user.PhoneNr, user.Password, user.Salt, user.Admin)
@@ -151,14 +225,14 @@ func registerHandler(w http.ResponseWriter, r *http.Request) {
 		hashed_password, _ := hashPassword(password, salt)
 
 		//TODO: Validate input, ex. Don't let users with a email that is already used.
-		result, err := pool.Exec("INSERT INTO Users (Name, Email, PhoneNr, Password, Salt, Admin) VALUES (?,?,?,?,?,?) RETURNING ID",
+		result, err := db.Exec("INSERT INTO Users (Name, Email, PhoneNr, Password, Salt, Admin) VALUES (?,?,?,?,?,?) RETURNING ID",
 			r.FormValue("name"),
 			r.FormValue("email"),
 			r.FormValue("tel"),
 			hashed_password,
 			salt,
 			true)
-		log.Printf("Created user: %s Password: %v salt: %v (%v, %v)", r.FormValue("name"), hashed_password, salt, result, err)
+		log.Printf("Created user: %s with ID: %v, error: %v", r.FormValue("name"), result, err)
 		http.Redirect(w, r, "/admin/", http.StatusSeeOther)
 	default:
 		break
