@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/style.css">
+    <script src="/htmx.min.js"></script>
+    <title>Park de Amuzament</title>
+</head>
+<body>
+  <header class="flex flex-row items-center bg-accent">
+	<button class="mw-2 m-1rem p-2"><img class="mw-full" src="/icons/menu-burger.svg" alt="Menu"/></button>
+	<strong>Panou de Administrare</strong>
+	<div class="ml-auto mr-1rem p-1">
+	  <button>User</button>
+	  <button>Settings</button>
+	</div>
+  </header>
+
+  <main class="flex flex-col h-100">
+	<div class="flex flex-col h-100 justify-center items-center hidden">
+	  <h1>Creaza Cont</h1>
+	  <form class="flex flex-col">
+		<input type="text" id="fullname" name="fullname" placeholder="Moldovanu Ion">
+		<input type="email" id="email" name="email" placeholder="Ion@example.com">
+		<input type="number" id="phonenumber" name="phonenumber" placeholder="Nr. telefon">
+		<input type="password" id="password" name="password" placeholder="Parola">
+		<input type="password" id="password_confirm" name="password_confirm" placeholder="Confirma parola">
+		<input type="submit" value="Creaza cont">
+	  </form>
+	</div>
+	<div class="flex flex-col h-100 justify-center items-center">
+	  <h1>Login</h1>
+	  <form class="flex flex-col">
+		<input type="email" id="email" name="email" placeholder="Ion@example.com">
+		<input type="password" id="password" name="password" placeholder="Parola">
+		<input type="submit" value="Login">
+	  </form>
+	</div>
+  </main>
+
+  <footer>
+  </footer>
+</body>
+</html>

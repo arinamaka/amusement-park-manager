@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/style.css">
+    <script src="/htmx.min.js"></script>
+    <title>Park de Amuzament</title>
+</head>
+<body>
+  <header class="flex flex-row items-center bg-accent">
+	<button class="mw-2 m-1rem p-2"><img class="mw-full" src="/icons/menu-burger.svg" alt="Menu"/></button>
+	<strong>Panou de Administrare</strong>
+	<div class="ml-auto mr-1rem p-1">
+	  <button>User</button>
+	  <button>Settings</button>
+	</div>
+  </header>
+
+  <main class="flex flex-row h-100">
+	<nav class="w-full w-20 h-100">
+	  <ul class="list-none m-0 p-1rem">
+		<li><a href="#">Atracții</a></li>
+		<li><a href="#">Vizitatori</a></li>
+		<li><a href="#">Bilete</a></li>
+		<li><a href="#">Evenimente</a></li>
+		<hr/>
+		<li><a href="#">Utilizatori</a></li>
+	  </ul>
+	</nav>
+	<section class="w-full w-75 ml-1rem p-1rem">
+	  <h2>Bilete</h2>
+	  <form>
+		<input type="text" placeholder="1234567890"></input>
+		<input type="submit" value="Verifica"></input>
+	  </form>
+
+	  <table>
+		<thead>
+		  <tr>
+			<td>ID</td>
+			<td>Nume Cumparator</td>
+			<td>Data Procurarii</td>
+			<td>Utilizat</td>
+		  </tr>
+		</thead>
+		<tbody>
+		  <tr>
+			<td>1</td>
+			<td>Vasile Ghiorghie</td>
+			<td>0000-00-00</td>
+			<td>0000-00-00</td>
+		  </tr>
+		  <tr>
+			<td>2</td>
+			<td>Antonescu Ioana</td>
+			<td>0000-00-00</td>
+			<td>-</td>
+		  </tr>
+		</tbody>
+	  </table>
+	</section>
+
+	
+  </main>
+
+  <footer>
+  </footer>
+</body>
+</html>

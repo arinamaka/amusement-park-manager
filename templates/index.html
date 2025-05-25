@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/style.css">
+    <script src="/static/htmx.min.js"></script>
+    <title>Park de Amuzament</title>
+</head>
+<body class="flex flex-col justify-center items-center m-auto p-2rem">
+  <header>
+    <h1>Park de Amuzament</h1>
+	<nav>
+	  <ul>
+		<li><a href="#">Acasa</a></li>
+	  </ul>
+	</nav>
+	<div>
+	  <img class="mw-full" src="/static/img/hero.jpg">
+	  <p>Image by <a href="https://pixabay.com/users/kasjanf-10588063/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=4392606">Kasjan Farbisz</a> from <a href="https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=4392606">Pixabay</a></p>
+	</div>
+  </header>
+
+  <main>
+    <p>This is my new website and it's using Simple.css. It's really cool. If you want to use it too, you can <a href="https://simplecss.org">visit their site</a>.</p>
+	<section>
+	  <h2>Atractiuni</h2>
+	</section>
+	<section>
+	  <h2>Despre Noi</h2>
+	</section>
+	<section>
+	  <h2>Evenimente</h2>
+	</section>
+	<section>
+	  <h2>Cumpara Bilet</h2>
+	  <div class="mw-100 justify-center items-center">
+		<form class="flex flex-col mw-50 m-auto">
+		  <label for="type">Tip bilet:</label>
+		  <select id="type">
+			<option value="adult">Adulti</option>
+			<option value="child">Copii</option>
+			<option value="vip">VIP</option>
+		  </select>
+		  <h3>Plata:</h3>
+		  <label for="cname">Name pe Card</label>
+		  <input type="text" id="cname" name="cardname" placeholder="Moldovanu Ion">
+		  <label for="ccnum">Numar card</label>
+		  <input type="text" id="ccnum" name="cardnumber" placeholder="1111-2222-3333-4444">
+		  <label for="expmonth">Luna Exp.</label>
+		  <input type="text" id="expmonth" name="expmonth" placeholder="September">
+		  <label for="expyear">An Exp.</label>
+          <input type="text" id="expyear" name="expyear" placeholder="2018">
+		  <label for="cvv">CVV</label>
+          <input type="text" id="cvv" name="cvv" placeholder="352">
+
+		  <p>Pret: 100MDL</p>
+		  <input type="submit" value="Cumpara bilet" class="btn">
+		</form>
+	  </div>
+	</section>
+	
+	
+  </main>
+
+  <footer>
+    <p>Park De Distractii</p>
+  </footer>
+</body>
+</html>

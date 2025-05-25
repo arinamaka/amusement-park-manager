@@ -1,0 +1,14 @@
+<h1 class="m-0">Creaza Cont</h1>
+<p>ori <a href="/admin/login">Login</a></p>
+<form class="flex flex-col" method="POST">
+  {{if .error}}
+  <p>Error: {{.error}}</p>
+  {{end}}
+  
+  <input type="text" id="name" name="name" placeholder="Moldovanu Ion">
+  <input type="email" id="email" name="email" placeholder="Ion@example.com">
+  <input type="number" id="tel" name="tel" placeholder="Nr. telefon">
+  <input type="password" id="password" name="password" placeholder="Parola">
+  <input type="password" id="password_confirm" name="password_confirm" placeholder="Confirma parola">
+  <input type="submit" value="Creaza cont">
+</form>
