@@ -1,11 +1,35 @@
-<h1 class="m-0">Login</h1>
-<p>ori <a href="/admin/register">Creaza cont</a></p>
-<form class="flex flex-col" method="POST">
-  {{if .error}}
-  <p>Error: {{.error}}</p>
-  {{end}}
-  
-  <input type="email" id="email" name="email" placeholder="Ion@example.com">
-  <input type="password" id="password" name="password" placeholder="Parola">
-  <input type="submit" value="Login">
-</form>
+<section class="section">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-half">
+        <h1 class="title is-1 has-text-centered">Login</h1>
+        <p class="has-text-centered">ori <a href="/admin/register">Creaza cont</a></p>
+        <form class="box" method="POST">
+          {{if .error}}
+          <p class="has-text-danger">Error: {{.error}}</p>
+          {{end}}
+
+          <div class="field">
+            <label class="label" for="email">Email</label>
+            <div class="control">
+              <input class="input" type="email" id="email" name="email" placeholder="Ion@example.com" required>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label" for="password">Parola</label>
+            <div class="control">
+              <input class="input" type="password" id="password" name="password" placeholder="Parola" required>
+            </div>
+          </div>
+
+          <div class="field is-grouped">
+            <div class="control">
+              <input class="button is-primary" type="submit" value="Login">
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>

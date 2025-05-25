@@ -1,0 +1,39 @@
+<div id="event-form">
+  <form method="POST">
+    <!-- <div class="field"> -->
+      <!-- <label class="label">ID</label> -->
+      <!-- <div class="control"> -->
+        <!-- <input class="input" type="number" id="event-id" disabled> -->
+      <!-- </div> -->
+    <!-- </div> -->
+    <div class="field">
+      <label class="label">Date</label>
+      <div class="control">
+        <input class="input" type="datetime-local" id="event-date" name="date">
+      </div>
+    </div>
+    <div class="field">
+      <label class="label">Name</label>
+      <div class="control">
+        <input class="input" type="text" id="event-name" name="name">
+      </div>
+    </div>
+    <div class="field">
+      <label class="label">Description</label>
+      <div class="control">
+        <textarea class="textarea" id="event-description" name="description"></textarea>
+      </div>
+    </div>
+    <div class="field is-grouped">
+      <div class="control">
+        <button class="button is-primary" id="save-event-button">Save</button>
+      </div>
+      <div class="control">
+        <button class="button is-danger" id="delete-event-button">Delete</button>
+      </div>
+      <div class="control">
+        <button class="button is-link" id="cancel-event-button">Cancel</button>
+      </div>
+    </div>
+  </form>
+</div>

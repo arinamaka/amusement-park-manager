@@ -1,14 +1,56 @@
-<h1 class="m-0">Creaza Cont</h1>
-<p>ori <a href="/admin/login">Login</a></p>
-<form class="flex flex-col" method="POST">
-  {{if .error}}
-  <p>Error: {{.error}}</p>
-  {{end}}
-  
-  <input type="text" id="name" name="name" placeholder="Moldovanu Ion">
-  <input type="email" id="email" name="email" placeholder="Ion@example.com">
-  <input type="number" id="tel" name="tel" placeholder="Nr. telefon">
-  <input type="password" id="password" name="password" placeholder="Parola">
-  <input type="password" id="password_confirm" name="password_confirm" placeholder="Confirma parola">
-  <input type="submit" value="Creaza cont">
-</form>
+<section class="section">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-half">
+        <h1 class="title is-1 has-text-centered">Creaza Cont</h1>
+        <p class="has-text-centered">ori <a href="/admin/login">Login</a></p>
+        <form class="box" method="POST">
+          {{if .error}}
+          <p class="has-text-danger">Error: {{.error}}</p>
+          {{end}}
+
+          <div class="field">
+            <label class="label" for="name">Nume</label>
+            <div class="control">
+              <input class="input" type="text" id="name" name="name" placeholder="Moldovanu Ion" required>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label" for="email">Email</label>
+            <div class="control">
+              <input class="input" type="email" id="email" name="email" placeholder="Ion@example.com" required>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label" for="tel">Nr. telefon</label>
+            <div class="control">
+              <input class="input" type="number" id="tel" name="tel" placeholder="Nr. telefon" required>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label" for="password">Parola</label>
+            <div class="control">
+              <input class="input" type="password" id="password" name="password" placeholder="Parola" required>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label" for="password_confirm">Confirma parola</label>
+            <div class="control">
+              <input class="input" type="password" id="password_confirm" name="password_confirm" placeholder="Confirma parola" required>
+            </div>
+          </div>
+
+          <div class="field is-grouped">
+            <div class="control">
+              <input class="button is-primary" type="submit" value="Creaza cont">
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>

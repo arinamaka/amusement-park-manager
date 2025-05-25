@@ -1,0 +1,21 @@
+<section id="body">
+  <table class="table is-fullwidth">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Date</th>
+        <th>Name</th>
+        <th>Description</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="events-table-body">
+      <!-- Events will be rendered here -->
+    </tbody>
+  </table>
+
+  <button class="button is-primary"
+		  hx-put="/admin/events/edit"
+		  hx-target="#body">Eveniment nou</button>
+
+</section>

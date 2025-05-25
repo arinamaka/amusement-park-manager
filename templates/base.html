@@ -1,39 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/css/bulma.min.css">
     <link rel="stylesheet" href="/static/style.css">
     <script src="/static/htmx.min.js"></script>
     <title>Park de Amuzament</title>
-</head>
-<body>
-  <header class="flex flex-row items-center bg-accent">
-	<button class="mw-2 m-1rem p-2"><img class="mw-full" src="/static/icons/menu-burger.svg" alt="Menu"/></button>
-	<strong>Panou de Administrare</strong>
-	{{if .user}}
-	<div class="ml-auto mr-1rem p-1">
-	  <button>User: {{.user}}</button>
-	  <button>Settings</button>
+    <style>
+      .menu-with-shadow {
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          border: 1px solid #dbdbdb;
+      }
+    </style>
+  </head>
+  <body>
+	<header class="navbar is-primary">
+      <div class="navbar-brand">
+		<a class="navbar-item" href="#">
+          <img src="/static/icons/menu-burger.svg" alt="Menu" width="28" height="28">
+		</a>
+		<div class="navbar-item">
+          <strong>Panou de Administrare</strong>
+		</div>
+      </div>
+      <div class="navbar-end">
+		{{if .user}}
+		<div class="navbar-item">
+          <button class="button is-primary">{{.user}}</button>
+          <button class="button is-primary">Setari</button>
+          <button class="button is-primary">Logout</button>
+		</div>
+		{{end}}
+      </div>
+	</header>
+
+	<div class="columns is-gapless" style="height: calc(100vh - 56px);">
+	  {{if .user}}
+	  {{template "navbar.html"}}
+	  {{end}}
+
+      <div class="column" style="display: flex; flex-direction: column;">
+		<main class="section" style="flex: 1;">
+          {{if not .user}}
+          <div class="columns is-centered">
+			<div class="column is-half">
+              {{if .register}}
+              {{template "register.html" .error}}
+              {{else}}
+              {{template "login.html" .error}}
+              {{end}}
+
+			</div>
+          </div>
+		  {{else}}
+		  {{template "dashboard_header.html" .}}
+
+		  {{if eq .page "Dashboard"}}
+		  {{template "dashboard.html"}}
+
+		  {{else if eq .page "Evenimente"}}
+		  {{template "events.html"}}
+		  
+		  {{end}}
+		  
+          {{end}}
+		</main>
+      </div>
 	</div>
-	{{end}}
-  </header>
-
-  <main class="flex flex-col h-100">
-	{{if not .user}}
-	<div class="flex flex-col h-100 justify-center items-center">
-
-	{{if .register}}
-	{{template "register.html" .error}}
-	{{else}}
-	{{template "login.html" .error}}
-	{{end}}
-	
-	</div>
-	{{end}}
-  </main>
-
-  <footer>
-  </footer>
-</body>
+  </body>
 </html>

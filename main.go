@@ -8,35 +8,40 @@ import (
 	"strconv"
 	"time"
 
+	"gorm.io/gorm"
+	"gorm.io/driver/sqlite"
 	_ "github.com/mattn/go-sqlite3"
 	"golang.org/x/crypto/bcrypt"
 )
 
+const DB_URL = "test.sqlite"
+
 var templates = template.Must(template.ParseGlob("templates/*.html"))
-var db *sql.DB
+var db *gorm.DB
 
 type User struct {
-	ID       int
+	ID       uint
 	Name     string
 	Email    string
-	PhoneNr  string
+	PhoneNr  *string
 	Password string
 	Salt     string
 	Admin    bool
 }
 
 type Ticket struct {
-	ID   int
+	ID   uint
 	Type string
 	Used bool
-	DateEmmited string
-	DateExpiry string
-	DateUsed string
-	BuyerId int
+	CreatedAt time.Time
+	ExpiresAt sql.NullTime
+	UsedAt sql.NullTime
+	BuyerID int
+	Buyer Visitor
 }
 
 type CreditCard struct {
-	ID   int
+	ID   uint
 	Name string
 	Number int
 	MonthExpiry int
@@ -45,28 +50,40 @@ type CreditCard struct {
 };
 
 type Visitor struct {
-	ID   int
+	ID   uint
 	Name string
 	CreditCardID int
+	CreditCard CreditCard
+}
+
+type Event struct {
+	ID uint
+	Date time.Time
+	Name string
+	Description string
 }
 
 func main() {
 	var err error
-	db, err = sql.Open("sqlite3", "./db.sqlite")
-	defer db.Close()
+	db, err = gorm.Open(sqlite.Open(DB_URL), &gorm.Config{})
 	if err != nil {
-		log.Fatal("Unable to open database", err)
+		log.Fatal("Failed to connect to database: ", err)
 	}
 
+	db.AutoMigrate(&User{}, &Ticket{},&CreditCard{}, &Visitor{}, &Event{})
+	
 	http.HandleFunc("/", indexHandler)
 	http.HandleFunc("/admin/", adminHandler)
+	http.HandleFunc("/admin/events", adminEventsHandler)
+	http.HandleFunc("/admin/events/edit", adminEventsEditHandler)
 	http.HandleFunc("/admin/login", loginHandler)
 	http.HandleFunc("/admin/register", registerHandler)
 	http.Handle("/static/", http.StripPrefix("/static/", http.FileServer(http.Dir("static"))))
 
-	log.Println("Staring server on http://localhost:8000")
+	log.Println("[Server] Staring server on http://localhost:8000")
 	log.Fatal(http.ListenAndServe(":8000", nil))
 }
+
 
 func hashPassword(password, salt string) (string, error) {
 	bytes := []byte(password + salt)
@@ -80,62 +97,67 @@ func checkPasswordHash(password, salt, hash string) bool {
 	return err == nil
 }
 
-func indexHandler(w http.ResponseWriter, r *http.Request) {
-	if r.URL.Path != "/" {
+func doesPageExist(w http.ResponseWriter, r *http.Request, path string) bool {
+	if r.URL.Path != path {
 		http.NotFound(w, r)
+		log.Printf("[404] '%v", r.URL.Path)
+		return false
+	}
+	return true
+}
+
+
+func isAuthentificated(w http.ResponseWriter, r *http.Request) *User {
+	session_id, err := r.Cookie("session")
+	if err != nil || session_id == nil{
+		return nil
+	}
+
+	var user User
+	db.First(&user, session_id.Value)
+	log.Printf("[Session] %v, %v", user.ID, user.Email)
+	return &user
+}
+
+func indexHandler(w http.ResponseWriter, r *http.Request) {
+	if !doesPageExist(w,r, "/") {
 		return
 	}
 
 	switch r.Method{
 		case "POST":
 		r.ParseForm()
-		var ticket Ticket
-		var card CreditCard
-		var visitor Visitor
-		ticket.Type = r.FormValue("type")
-		card.Name = r.FormValue("cardname")
-		card.Number, _ = strconv.Atoi(r.FormValue("cardnumber"))
-		card.MonthExpiry, _ = strconv.Atoi(r.FormValue("expmonth"))
-		card.YearExpiry, _ = strconv.Atoi(r.FormValue("expyear"))
-		card.CCV, _ = strconv.Atoi(r.FormValue("cvv"))
-
+		typ := r.FormValue("type")
+		cardname := r.FormValue("cardname")
+		cardnumber, _ := strconv.Atoi(r.FormValue("cardnumber"))
+		expmonth, _ := strconv.Atoi(r.FormValue("expmonth"))
+		expyear, _ := strconv.Atoi(r.FormValue("expyear"))
+		ccv, _ := strconv.Atoi(r.FormValue("cvv"))
+		
 		// Insert credit card
-		result, err := db.Exec("INSERT INTO CreditCard (Name,Number,MonthExpiry,YearExpiry,CCV) VALUES (?,?,?,?,?) RETURNING ID", 
-			card.Name, 
-			card.Number,
-			card.MonthExpiry, 
-			card.YearExpiry,
-			card.CCV)
-		if err != nil {
-			log.Printf("Scan error: %v", err)
+		card := CreditCard{Name: cardname, Number: cardnumber, MonthExpiry: expmonth, YearExpiry: expyear, CCV: ccv}
+		result := db.Create(&card)
+		if result.Error != nil {
+			log.Printf("error inserting credit card: %v", card.ID)
 			return
 		}
-		id, _ := result.LastInsertId()
-		card.ID = int(id)
 		log.Printf("CardID: %v", card.ID)
 
 		// Insert Visitor, with cardID
-		result, err = db.Exec("INSERT INTO Visitor (Name, CreditCardID) VALUES (?,?) RETURNING ID", card.Name, card.ID)
-		if err != nil {
-			log.Printf("Scan error: %v", err)
+		visitor := Visitor{Name: cardname, CreditCard: card}
+		result = db.Create(&visitor)
+		if result.Error != nil {
+			log.Printf("error inserting credit card: %v", result)
 			return
 		}
-		id, _ = result.LastInsertId()
-		visitor.ID = int(id)
-		
 		log.Printf("VisitorID: %v", visitor.ID)
 
 		// Insert Ticket, with VisitorID
-		_, err = db.Exec("INSERT INTO Ticket (Type, Used, DateEmmited, DateExpiry, DateUsed, BuyerId) VALUES (?,?,?,?,?,?)", 
-			ticket.Type,
-			false,
-			time.Now().Format(time.RFC3339),
-			time.Now().AddDate(0,1,0).Format(time.RFC3339), // Expires one month after purchase
-			"0001-01-01T00:00:00Z",
-			visitor.ID,
-		)
-		if err != nil {
-			log.Printf("Scan error: %v", err)
+		// createdAt := time.Now().Format(time.RFC3339)
+		ticket := Ticket{Type:typ, Used: false, Buyer: visitor}
+		result = db.Create(&ticket)
+		if result.Error != nil {
+			log.Printf("error inserting credit card: %v", result.Error)
 			return
 		}
 		log.Print("Added Ticket!")
@@ -144,64 +166,92 @@ func indexHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func adminHandler(w http.ResponseWriter, r *http.Request) {
-	if r.URL.Path != "/admin/" {
-		http.NotFound(w, r)
+	if !doesPageExist(w,r, "/admin/") {
 		return
 	}
-	session_id, err := r.Cookie("session")
-	if err != nil {
-		log.Printf("Cookie error: %v", err)
-	}
-	if session_id == nil {
+	
+	user := isAuthentificated(w, r)
+	if user == nil {
 		http.Redirect(w, r, "/admin/login", http.StatusSeeOther)
 		return
 	}
-	users := queryUsers("WHERE ID=?", session_id.Value)
-	log.Printf("SessionID: %v, Users: %v", session_id.Value, users)
-
+	
 	data := map[string]interface{}{
-		"user": users[0].Name,
+		"user": user.Name,
+		"page": "Dashboard",
+		"page_link": "/admin/",
 	}
 	templates.ExecuteTemplate(w, "base.html", data)
 }
 
-func queryUsers(query string, values ...any) []User {
-	rows, err := db.Query("SELECT * FROM Users "+query, values...)
-	// log.Printf("q: %v %v","SELECT * FROM Users " + query, values)
+func adminEventsEditHandler(w http.ResponseWriter, r *http.Request) {
+	if !doesPageExist(w,r, "/admin/events/edit") {
+		return
+	}
+
+	if r.Method != "PUT" {
+		http.Error(w, "Method Not Supported", http.StatusMethodNotAllowed)
+		return
+	}
+
+	
+	err := templates.ExecuteTemplate(w, "event_edit.html", nil)
 	if err != nil {
-		log.Printf("error: Query error %v.", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
-	result := []User{}
-	for rows.Next() {
-		var user User
-		err = rows.Scan(&user.ID, &user.Name, &user.Email, &user.PhoneNr, &user.Password, &user.Salt, &user.Admin)
-		if err != nil {
-			log.Printf("error: Scan error %v.", err)
-			continue
-		}
-		result = append(result, user)
-	}
-	return result
 }
 
+func adminEventsHandler(w http.ResponseWriter, r *http.Request) {
+	if !doesPageExist(w,r, "/admin/events") {
+		return
+	}
+	user := isAuthentificated(w, r)
+	if user == nil {
+		http.Redirect(w, r, "/admin/login", http.StatusSeeOther)
+		return
+	}
+	switch r.Method {
+	case "POST":
+		r.ParseForm()
+		date, _ := time.Parse("2006-01-02T15:04",r.FormValue("date"))
+		name := r.FormValue("name")
+		description := r.FormValue("description")
+
+		event := Event{Date:date, Name:name, Description:description}
+		result := db.Create(&event)
+		if result.Error != nil {
+			log.Printf("Failed to create event: %v", result.Error)
+		}
+		
+		log.Printf("Created event: %s", name)
+	}
+	
+	data := map[string]interface{}{
+		"user": user.Name,
+		"page": "Evenimente",
+		"page_link": "/admin/events",
+	}
+	templates.ExecuteTemplate(w, "base.html", data)
+
+	
+}
 
 func loginHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "POST":
 		r.ParseForm()
-		users := queryUsers("WHERE Email=?", r.FormValue("email"))
-		if len(users) == 0 {
-			templates.ExecuteTemplate(w, "base.html", map[string]interface{}{"error": "Parola sau E-mail gresit."})
-			return
-		}
-		user := users[0]
-
-		if r.FormValue("email") == user.Email && checkPasswordHash(r.FormValue("password"), user.Email, user.Password) {
-			log.Printf("Authenificated user: %s (%v,%v,%v,%v,%v,%v,%v)", r.FormValue("email"), user.ID, user.Name, user.Email, user.PhoneNr, user.Password, user.Salt, user.Admin)
-
+		email := r.FormValue("email")
+		password := r.FormValue("password")
+		
+		var user User
+		db.Where("email = ?", email).First(&user)
+		
+		if email == user.Email && checkPasswordHash(password, user.Email, user.Password) {
+			log.Printf("Authenificated user: %s (%v,%v,%v,%v,%v,%v,%v)", email, user.ID, user.Name, user.Email, user.PhoneNr, user.Password, user.Salt, user.Admin)
 			http.SetCookie(w, &http.Cookie{
 				Name:     "session",
-				Value:    strconv.Itoa(user.ID),
+				Value:    strconv.Itoa(int(user.ID)),
 				Path:     "/",
 				HttpOnly: true,
 			})
@@ -218,21 +268,21 @@ func registerHandler(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case "POST":
 		r.ParseForm()
-		log.Printf("Register user: %s\n", r.FormValue("name"))
-
+		name := r.FormValue("name")
+		email := r.FormValue("email")
+		tel := r.FormValue("tel")
 		password := r.FormValue("password")
-		salt := r.FormValue("email") // using email as salt
+		
+		salt := email // using email as salt
 		hashed_password, _ := hashPassword(password, salt)
 
 		//TODO: Validate input, ex. Don't let users with a email that is already used.
-		result, err := db.Exec("INSERT INTO Users (Name, Email, PhoneNr, Password, Salt, Admin) VALUES (?,?,?,?,?,?) RETURNING ID",
-			r.FormValue("name"),
-			r.FormValue("email"),
-			r.FormValue("tel"),
-			hashed_password,
-			salt,
-			true)
-		log.Printf("Created user: %s with ID: %v, error: %v", r.FormValue("name"), result, err)
+		user := User{Name:name, Email: email, PhoneNr: &tel, Password: hashed_password, Salt: salt, Admin:true}
+		result := db.Create(&user)
+		if result.Error != nil {
+			log.Printf("Failed to create user: %v", result.Error)
+		}
+		log.Printf("Created user: %s", name)
 		http.Redirect(w, r, "/admin/", http.StatusSeeOther)
 	default:
 		break

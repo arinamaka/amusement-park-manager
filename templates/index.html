@@ -1,70 +1,367 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/static/style.css">
+    <link rel="stylesheet" href="/static/css/bulma.min.css">
     <script src="/static/htmx.min.js"></script>
+    <style>
+      .background-hero {
+          width: 100%;
+          height: 100%;
+          background-image: url("/static/img/hero.jpg");
+          background-size: cover;
+          background-position: center;
+          position: relative;
+      }
+      .hero-body {
+          position: relative;
+          z-index: 1;
+      }
+      .hero-body .title {
+          color: white;
+          text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+      }
+      .navbar-item {
+          color: white;
+      }
+	  .navbar-title {
+		  font-size: 2rem;
+	  }
+    </style>
     <title>Park de Amuzament</title>
-</head>
-<body class="flex flex-col justify-center items-center m-auto p-2rem">
-  <header>
-    <h1>Park de Amuzament</h1>
-	<nav>
-	  <ul>
-		<li><a href="#">Acasa</a></li>
-	  </ul>
-	</nav>
-	<div>
-	  <img class="mw-full" src="/static/img/hero.jpg">
-	  <p>Image by <a href="https://pixabay.com/users/kasjanf-10588063/?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=4392606">Kasjan Farbisz</a> from <a href="https://pixabay.com//?utm_source=link-attribution&utm_medium=referral&utm_campaign=image&utm_content=4392606">Pixabay</a></p>
-	</div>
-  </header>
+  </head>
+  <body>
+    <header class="hero is-primary background-hero is-fullheight">
+      <nav class="navbar">
+        <strong class="navbar-item navbar-title">Parc de Amuzament</strong>
+        <div class="navbar-end">
+          <a class="navbar-item is-active" href="#">Acasa</a>
+          <a class="navbar-item" href="#about">Despre</a>
+          <a class="navbar-item" href="#attractions">Atractii</a>
+          <a class="navbar-item" href="#events">Evenimente</a>
+          <a class="navbar-item" href="#buy-ticket">Cumpara Bilet</a>
+        </div>
+      </nav>
+      
+      <div class="hero-body">
+        <div class="container has-text-centered">
+          <p class="title">Parc de Amuzament</p>
+        </div>
+      </div>
+    </header>
 
-  <main>
-    <p>This is my new website and it's using Simple.css. It's really cool. If you want to use it too, you can <a href="https://simplecss.org">visit their site</a>.</p>
-	<section>
-	  <h2>Atractiuni</h2>
-	</section>
-	<section>
-	  <h2>Despre Noi</h2>
-	</section>
-	<section>
-	  <h2>Evenimente</h2>
-	</section>
-	<section>
-	  <h2>Cumpara Bilet</h2>
-	  <div class="mw-100 justify-center items-center">
-		<form class="flex flex-col mw-50 m-auto" method="POST">
-		  <label for="type">Tip bilet:</label>
-		  <select id="type">
-			<option value="adult">Adulti</option>
-			<option value="child">Copii</option>
-			<option value="vip">VIP</option>
-		  </select>
-		  <h3>Plata:</h3>
-		  <label for="cname">Name pe Card</label>
-		  <input type="text" id="cname" name="cardname" placeholder="Moldovanu Ion">
-		  <label for="ccnum">Numar card</label>
-		  <input type="text" id="ccnum" name="cardnumber" placeholder="1111-2222-3333-4444">
-		  <label for="expmonth">Luna Exp.</label>
-		  <input type="text" id="expmonth" name="expmonth" placeholder="September">
-		  <label for="expyear">An Exp.</label>
-          <input type="text" id="expyear" name="expyear" placeholder="2018">
-		  <label for="cvv">CVV</label>
-          <input type="text" id="cvv" name="cvv" placeholder="352">
+    <main class="content">
+	  <section class="section" id="about">
+		<h2 class="has-text-centered">Despre Noi</h2>
+		<div class="container">
+          <p>Parcul de Distracții "Aventura Moldovei" este destinația perfectă pentru întreaga familie! Situat în inima Moldovei, parcul nostru oferă o gamă variată de atracții și activități pentru toate vârstele. De la montagne russe palpitante la carusele colorate, fiecare vizitator va găsi ceva care să-i aducă zâmbetul pe buze.</p>
+          <p>Cu o echipă dedicată de profesioniști, ne asigurăm că fiecare experiență este sigură și plăcută. Parcul nostru este dotat cu cele mai moderne măsuri de siguranță, astfel încât tu și familia ta să vă puteți bucura de o zi de neuitat fără griji.</p>
+          <p>Pe lângă atracțiile de distracție, "Aventura Moldovei" oferă și o varietate de opțiuni de divertisment, inclusiv spectacole live, festivaluri tematice și evenimente speciale pe parcursul întregului an. Nu rata ocazia de a explora zonele noastre de relaxare, unde poți savura delicii culinare din bucătăria locală și internațională.</p>
+          <p>Vino să descoperi magia parcului nostru și să creezi amintiri de neuitat alături de cei dragi! Te așteptăm cu brațele deschise la "Aventura Moldovei", unde distracția nu se termină niciodată!</p>
+		</div>
+	  </section>
+	  <section class="section" id="events">
+		<h2 class="has-text-centered">Evenimente</h2>
+		<div class="columns is-multiline is-centered">
+		  <div class="column is-one-third">
+            <div class="card">
+              <div class="card-image">
+                <figure class="image">
+                  <img src="/static/img/event1.jpg" alt="Eveniment 1">
+                </figure>
+              </div>
+              <div class="card-content">
+                <p class="title is-4">Concert de Vară</p>
+                <p class="subtitle is-6">Data: 15 Iulie 2025</p>
+                <p>Vino să te bucuri de un concert live cu artiști locali și internaționali! O seară plină de muzică, distracție și voie bună te așteaptă la Parc de Amuzament.</p>
+                <div class="has-text-centered">
+                  <a class="button is-link" href="#">Mai multe...</a>
+                </div>
+              </div>
+            </div>
+		  </div>
+		  <div class="column is-one-third">
+            <div class="card">
+              <div class="card-image">
+                <figure class="image">
+                  <img src="/static/img/event2.jpg" alt="Eveniment 2">
+                </figure>
+              </div>
+              <div class="card-content">
+                <p class="title is-4">Festivalul Gusturilor</p>
+                <p class="subtitle is-6">Data: 22 August 2025</p>
+                <p>Descoperă cele mai delicioase preparate din bucătăria locală și internațională! Festivalul Gusturilor îți va încânta papilele gustative cu mâncăruri variate și băuturi răcoritoare.</p>
+                <div class="has-text-centered">
+                  <a class="button is-link" href="#">Mai multe...</a>
+                </div>
+              </div>
+            </div>
+		  </div>
+		  <div class="column is-one-third">
+            <div class="card">
+              <div class="card-image">
+                <figure class="image">
+                  <img src="/static/img/event3.jpg" alt="Eveniment 3">
+                </figure>
+              </div>
+              <div class="card-content">
+                <p class="title is-4">Noaptea Distracției</p>
+                <p class="subtitle is-6">Data: 30 Septembrie 2025</p>
+                <p>Participă la Noaptea Distracției, unde te așteaptă jocuri, concursuri și premii surpriză! O seară plină de aventură și distracție pentru întreaga familie.</p>
+                <div class="has-text-centered">
+                  <a class="button is-link" href="#">Mai multe...</a>
+                </div>
+              </div>
+            </div>
+		  </div>
+		</div>
+		<div class="columns is-multiline is-centered">
+		  <div class="column is-one-third">
+            <div class="card">
+              <div class="card-image">
+                <figure class="image">
+                  <img src="/static/img/event1.jpg" alt="Eveniment 1">
+                </figure>
+              </div>
+              <div class="card-content">
+                <p class="title is-4">Concert de Vară</p>
+                <p class="subtitle is-6">Data: 15 Iulie 2025</p>
+                <p>Vino să te bucuri de un concert live cu artiști locali și internaționali! O seară plină de muzică, distracție și voie bună te așteaptă la Parc de Amuzament.</p>
+                <div class="has-text-centered">
+                  <a class="button is-link" href="#">Mai multe...</a>
+                </div>
+              </div>
+            </div>
+		  </div>
+		  <div class="column is-one-third">
+            <div class="card">
+              <div class="card-image">
+                <figure class="image">
+                  <img src="/static/img/event2.jpg" alt="Eveniment 2">
+                </figure>
+              </div>
+              <div class="card-content">
+                <p class="title is-4">Festivalul Gusturilor</p>
+                <p class="subtitle is-6">Data: 22 August 2025</p>
+                <p>Descoperă cele mai delicioase preparate din bucătăria locală și internațională! Festivalul Gusturilor îți va încânta papilele gustative cu mâncăruri variate și băuturi răcoritoare.</p>
+                <div class="has-text-centered">
+                  <a class="button is-link" href="#">Mai multe...</a>
+                </div>
+              </div>
+            </div>
+		  </div>
+		  <div class="column is-one-third">
+            <div class="card">
+              <div class="card-image">
+                <figure class="image">
+                  <img src="/static/img/event3.jpg" alt="Eveniment 3">
+                </figure>
+              </div>
+              <div class="card-content">
+                <p class="title is-4">Noaptea Distracției</p>
+                <p class="subtitle is-6">Data: 30 Septembrie 2025</p>
+                <p>Participă la Noaptea Distracției, unde te așteaptă jocuri, concursuri și premii surpriză! O seară plină de aventură și distracție pentru întreaga familie.</p>
+                <div class="has-text-centered">
+                  <a class="button is-link" href="#">Mai multe...</a>
+                </div>
+              </div>
+            </div>
+		  </div>
+		</div>
+		<div class="columns is-multiline is-centered">
+		  <div class="column is-one-third">
+            <div class="card">
+              <div class="card-image">
+                <figure class="image">
+                  <img src="/static/img/event1.jpg" alt="Eveniment 1">
+                </figure>
+              </div>
+              <div class="card-content">
+                <p class="title is-4">Concert de Vară</p>
+                <p class="subtitle is-6">Data: 15 Iulie 2025</p>
+                <p>Vino să te bucuri de un concert live cu artiști locali și internaționali! O seară plină de muzică, distracție și voie bună te așteaptă la Parc de Amuzament.</p>
+                <div class="has-text-centered">
+                  <a class="button is-link" href="#">Mai multe...</a>
+                </div>
+              </div>
+            </div>
+		  </div>
+		  <div class="column is-one-third">
+            <div class="card">
+              <div class="card-image">
+                <figure class="image">
+                  <img src="/static/img/event2.jpg" alt="Eveniment 2">
+                </figure>
+              </div>
+              <div class="card-content">
+                <p class="title is-4">Festivalul Gusturilor</p>
+                <p class="subtitle is-6">Data: 22 August 2025</p>
+                <p>Descoperă cele mai delicioase preparate din bucătăria locală și internațională! Festivalul Gusturilor îți va încânta papilele gustative cu mâncăruri variate și băuturi răcoritoare.</p>
+                <div class="has-text-centered">
+                  <a class="button is-link" href="#">Mai multe...</a>
+                </div>
+              </div>
+            </div>
+		  </div>
+		  <div class="column is-one-third">
+            <div class="card">
+              <div class="card-image">
+                <figure class="image">
+                  <img src="/static/img/event3.jpg" alt="Eveniment 3">
+                </figure>
+              </div>
+              <div class="card-content">
+                <p class="title is-4">Noaptea Distracției</p>
+                <p class="subtitle is-6">Data: 30 Septembrie 2025</p>
+                <p>Participă la Noaptea Distracției, unde te așteaptă jocuri, concursuri și premii surpriză! O seară plină de aventură și distracție pentru întreaga familie.</p>
+                <div class="has-text-centered">
+                  <a class="button is-link" href="#">Mai multe...</a>
+                </div>
+              </div>
+            </div>
+		  </div>
+		</div>
 
-		  <p>Pret: 100MDL</p>
-		  <input type="submit" value="Cumpara bilet" class="btn">
-		</form>
+	  </section>
+
+	  <section class="section" id="attractions">
+		<h2>Atractiuni</h2>
+		<div class="container">
+		  <div class="row">
+			<div class="col-md-4 mb-5">
+			  <div class="card p-4">
+				<img src="img/roller-coaster.jpg" class="card-img-top" alt="Roller Coaster">
+				<div class="card-body">
+				  <h5 class="card-title">Montanul</h5>
+				  <p class="card-text">Simularea unei călătorii pe munte, cu vederi spectaculoase și adrenalină la maximum.</p>
+				  <a href="#buy-ticket" class="btn btn-primary">Cumpara Bilet</a>
+				</div>
+			  </div>
+			</div>
+			<div class="col-md-4 mb-5">
+			  <div class="card p-4">
+				<img src="img/ferris-wheel.jpg" class="card-img-top" alt="Ferris Wheel">
+				<div class="card-body">
+				  <h5 class="card-title">Rota Gigant</h5>
+				  <p class="card-text">O roată panoramică care vă oferă o vedere deosebită asupra întregului parc și orașului.</p>
+				  <a href="#buy-ticket" class="btn btn-primary">Cumpara Bilet</a>
+				</div>
+			  </div>
+			</div>
+			<div class="col-md-4 mb-5">
+			  <div class="card p-4">
+				<img src="img/haunted-house.jpg" class="card-img-top" alt="Haunted House">
+				<div class="card-body">
+				  <h5 class="card-title">Casa Fantomelor</h5>
+				  <p class="card-text">O experiență de frison care vă va face să vă simțiți în mijlocul unei povești de groază.</p>
+				  <a href="#buy-ticket" class="btn btn-primary">Cumpara Bilet</a>
+				</div>
+			  </div>
+			</div>
+		  </div>
+		  <div class="row mt-5">
+			<div class="col-md-4 mb-5">
+			  <div class="card p-4">
+				<img src="img/carousel.jpg" class="card-img-top" alt="Carousel">
+				<div class="card-body">
+				  <h5 class="card-title">Caruselul Magic</h5>
+				  <p class="card-text">O călătorie nostalgică și plină de magie pentru toți copiii și adulții.</p>
+				  <a href="#buy-ticket" class="btn btn-primary">Cumpara Bilet</a>
+				</div>
+			  </div>
+			</div>
+			<div class="col-md-4 mb-5">
+			  <div class="card p-4">
+				<img src="img/bumper-cars.jpg" class="card-img-top" alt="Bumper Cars">
+				<div class="card-body">
+				  <h5 class="card-title">Mașinile Tamponatoare</h5>
+				  <p class="card-text">Distracție garantată pentru toți cei care vor să se simtă ca într-un film de acțiune.</p>
+				  <a href="#buy-ticket" class="btn btn-primary">Cumpara Bilet</a>
+				</div>
+			  </div>
+			</div>
+			<div class="col-md-4 mb-5">
+			  <div class="card p-4">
+				<img src="img/food-stalls.jpg" class="card-img-top" alt="Food Stalls">
+				<div class="card-body">
+				  <h5 class="card-title">Chioșcuri de Mâncare</h5>
+				  <p class="card-text">O varietate de delicii culinare pentru a vă satisface gusturile și a vă reîncărca energiile.</p>
+				  <a href="#buy-ticket" class="btn btn-primary">Cumpara Bilet</a>
+				</div>
+			  </div>
+			</div>
+		  </div>
+		</div>
+	  </section>
+
+	  <section class="section" id="buy-ticket">
+		<h2 class="has-text-centered">Cumpara Bilet</h2>
+		<div class="card">
+		  <div class="card-content">
+            <div class="columns">
+              <div class="column is-half">
+                <figure class="image">
+                  <img src="/static/img/ticket-image.jpg" alt="Ticket Image">
+                </figure>
+                <p>Purchase your tickets for an unforgettable experience at Parc de Amuzament! Choose from various ticket types and enjoy all the attractions.</p>
+              </div>
+              <div class="column is-half">
+                <form method="POST">
+                  <label for="type">Tip bilet:</label>
+                  <select id="type" class="select">
+                    <option value="adult">Adulti</option>
+                    <option value="child">Copii</option>
+                    <option value="vip">VIP</option>
+                  </select>
+                  <h3>Plata:</h3>
+                  <label for="cname">Name pe Card</label>
+                  <input type="text" id="cname" name="cardname" class="input" placeholder="Moldovanu Ion">
+                  <label for="ccnum">Numar card</label>
+                  <input type="text" id="ccnum" name="cardnumber" class="input" placeholder="1111-2222-3333-4444">
+                  <label for="expmonth">Luna Exp.</label>
+                  <input type="text" id="expmonth" name="expmonth" class="input" placeholder="September">
+                  <label for="expyear">An Exp.</label>
+                  <input type="text" id="expyear" name="expyear" class="input" placeholder="2018">
+                  <label for="cvv">CVV</label>
+                  <input type="text" id="cvv" name="cvv" class="input" placeholder="352">
+                  <p>Pret: 100MDL</p>
+                  <input type="submit" value="Cumpara bilet" class="button is-primary">
+                </form>
+              </div>
+            </div>
+		  </div>
+		</div>
+	  </section>
+    </main>
+
+	<footer class="footer mt-5 bg-dark text-white">
+	  <div class="container">
+		<div class="row">
+		  <div class="col-md-4">
+			<h5>Despre Noi</h5>
+			<p>Parkul nostru de distracții este destinat să vă ofere cele mai bune momente de distracție pentru toată familia. Veniți și descoperiți o lume plină de aventură și divertisment!</p>
+		  </div>
+		  <div class="col-md-4">
+			<h5>Contact</h5>
+			<p>Strada Exemplu, Nr. 123, Chișinău, Moldova</p>
+			<p>Telefon: +373 123 456 789</p>
+			<p>Email: contact@parculdistractii.md</p>
+		  </div>
+		  <div class="col-md-4 text-md-right">
+			<h5>Linkuri Utile</h5>
+			<a href="/admin" class="btn btn-link text-white">Admin</a>
+			<a href="#attractions" class="btn btn-link text-white">Atractiuni</a>
+			<a href="#buy-ticket" class="btn btn-link text-white">Cumpara Bilet</a>
+			<a href="#contact" class="btn btn-link text-white">Contact</a>
+		  </div>
+		</div>
+		<div class="row mt-4">
+		  <div class="col-md-12 text-center">
+			<p>&copy; 2023 Parkul De Distractii. Toate drepturile rezervate.</p>
+		  </div>
+		</div>
 	  </div>
-	</section>
-	
-	
-  </main>
-
-  <footer>
-    <p>Park De Distractii</p>
-  </footer>
-</body>
+	</footer>
+  </body>
 </html>

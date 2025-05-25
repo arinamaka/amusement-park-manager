@@ -15,7 +15,7 @@ CREATE TABLE Ticket (
 	DateEmmited DATE NOT NULL,
 	DateExpiry DATE NOT NULL,
 	DateUsed DATE NOT NULL,
-	BuyerId INTEGER NOT NULL,
+	BuyerId INTEGER NOT NULL, //can be null
 	FOREIGN KEY(BuyerID) REFERENCES Visitor(ID)
 );
 
@@ -55,7 +55,7 @@ CREATE TABLE CreditCard (
 	ID   INTEGER PRIMARY KEY AUTOINCREMENT,
 	Name TEXT NOT NULL,
 	Number INTEGER NOT NULL,		
-	MonthExpiry TEXT NOT NULL,		
+	MonthExpiry TEXT NOT NULL,		// integer
 	YearExpiry INTEGER NOT NULL,		
 	CCV INTEGER NOT NULL		
 );
