@@ -1,28 +1,21 @@
 <section class="section columns">
-  <div class="card column is-one-forth mb-5">
-	<div class="card-content">
-	  <h3 class="subtitle">Vizitatori/saptamana</h3>
-	  <h1 class="title">250</h1>
-	</div>
-  </div>
-
-  <div class="card column is-one-forth mb-5">
+  <div class="card column is-one-third mb-5">
 	<div class="card-content">
 	  <h3 class="subtitle">Vizitatori/zi</h3>
-	  <h1 class="title">250</h1>
-	</div>
-  </div>
-  <div class="card column is-one-forth mb-5">
-	<div class="card-content">
-	  <h3 class="subtitle">Bilete</h3>
-	  <h1 class="title">250</h1>
+	  <h1 class="title">{{.visitors_day}}</h1>
 	</div>
   </div>
 
-  <div class="card column is-one-forth mb-5">
+  <div class="card column is-one-third mb-5">
 	<div class="card-content">
-	  <h3 class="subtitle">Vizitatori</h3>
-	  <h1 class="title">250</h1>
+	  <h3 class="subtitle">Bilete</h3>
+	  <h1 class="title">{{.tickets}}</h1>
+	</div>
+  </div>
+  <div class="card column is-one-third mb-5">
+	<div class="card-content">
+	  <h3 class="subtitle">Venit(MDL)</h3>
+	  <h1 class="title">{{.income}}</h1>
 	</div>
   </div>
 </section>

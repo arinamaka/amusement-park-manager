@@ -1,0 +1,31 @@
+
+<section class="card p-3" id="body">
+  <table class="table is-fullwidth">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nume</th>
+        <th>Tip</th>
+        <th>Capacitate</th>
+        <th>Pret(MDL)</th>
+      </tr>
+    </thead>
+    <tbody id="events-table-body">
+	  {{range .data}}
+	  <tr id="{{.ID}}">
+		<td>{{.ID}}</td>
+		<td>{{.Name}}</td>
+		<td>{{.Type}}</td>
+		<td>{{.Capacity}}</td>
+		<td>{{.Price}}</td>
+	  </tr>
+	  {{end}}	  
+
+    </tbody>
+  </table>
+
+  <button class="button is-primary"
+		  hx-put="/admin/attractions/edit"
+		  hx-target="#body">Adauga atractie</button>
+
+</section>

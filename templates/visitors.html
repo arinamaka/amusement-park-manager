@@ -1,0 +1,24 @@
+<section class="card p-3" id="body">
+  <table class="table is-fullwidth">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>CardNr.</th>
+        <th>CardExpiry</th>
+        <th>CCV</th>
+      </tr>
+    </thead>
+    <tbody id="events-table-body">
+      {{range .data}}
+	  <tr id="{{.ID}}">
+		<td>{{.ID}}</td>
+		<td>{{.Name}}</td>
+		<td>{{.CreditCard.Number}}</td>
+		<td>{{.CreditCard.MonthExpiry}}/{{.CreditCard.YearExpiry}}</td>
+		<td>{{.CreditCard.CCV}}</td>
+	  <tr>
+	  {{end}}
+    </tbody>
+  </table>
+</section>

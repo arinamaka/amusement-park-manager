@@ -1,16 +1,24 @@
-<section id="body">
+<section class="card p-3" id="body">
   <table class="table is-fullwidth">
     <thead>
       <tr>
         <th>ID</th>
-        <th>Date</th>
-        <th>Name</th>
-        <th>Description</th>
-        <th>Actions</th>
+        <th>Data</th>
+        <th>Denumire</th>
+        <th>Descriere</th>
       </tr>
     </thead>
     <tbody id="events-table-body">
-      <!-- Events will be rendered here -->
+	  
+	  {{range .data}}
+	  <tr>
+	  <td>{{.ID}}</td>
+	  <td>{{.Date}}</td>
+	  <td>{{.Name}}</td>
+	  <td>{{.Description}}</td>
+	  </tr>
+	  {{end}}	  
+
     </tbody>
   </table>
 

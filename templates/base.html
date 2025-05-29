@@ -28,7 +28,6 @@
 		{{if .user}}
 		<div class="navbar-item">
           <button class="button is-primary">{{.user}}</button>
-          <button class="button is-primary">Setari</button>
           <button class="button is-primary">Logout</button>
 		</div>
 		{{end}}
@@ -57,10 +56,20 @@
 		  {{template "dashboard_header.html" .}}
 
 		  {{if eq .page "Dashboard"}}
-		  {{template "dashboard.html"}}
+		  {{template "dashboard.html" .}}
 
 		  {{else if eq .page "Evenimente"}}
-		  {{template "events.html"}}
+		  {{template "events.html" .}}
+
+		  {{else if eq .page "Atractii"}}
+		  {{template "attractions.html" .}}
+
+		  {{else if eq .page "Bilete"}}
+		  {{template "tickets.html" .}}
+
+		  {{else if eq .page "Vizitatori"}}
+		  {{template "visitors.html" .}}
+		  <!-- </section> -->
 		  
 		  {{end}}
 		  

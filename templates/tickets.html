@@ -1,0 +1,25 @@
+<section class="card p-3" id="body">
+  <table class="table is-fullwidth">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Creat</th>
+        <th>Expira</th>
+        <th>VizitatorID</th>
+        <th>AttractieID</th>
+      </tr>
+    </thead>
+    <tbody id="events-table-body">
+	  {{range .data}}
+	  <tr id="{{.ID}}">
+		<td>{{.ID}}</td>
+		<td>{{.CreatedAt}}</td>
+		<td>{{.ExpiresAt}}</td>
+		<td><a href="/admin/visitors#{{.BuyerID}}">{{.BuyerID}}</a></td>
+		<td><a href="/admin/attractions#{{.AttractionID}}">{{.AttractionID}}</a></td>
+	  </tr>
+	  {{end}}	  
+
+    </tbody>
+  </table>
+</section>
